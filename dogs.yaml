@@ -1,0 +1,162 @@
+openapi: 3.0.0
+info:
+  title: Dog API
+  description: REST API for managing dogs
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+paths:
+  /dogs:
+    get:
+      summary: Get all dogs
+      description: Retrieves a list of all dogs
+      operationId: getAllDogs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dog'
+    post:
+      summary: Create a new dog
+      description: Creates a new dog
+      operationId: createDog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dog'
+      responses:
+        '200':
+          description: Dog created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+  /dogs/by-name/{name}:
+    get:
+      summary: Get dog by Name
+      description: Retrieves the dog with the specified Name
+      operationId: getDogsByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dogs found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+  /dogs/{id}:
+    get:
+      summary: Get dog by ID
+      description: Retrieves the dog with the specified ID
+      operationId: getDogById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dog found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '404':
+          description: Dog not found
+          content:
+            text/plain:
+              schema:
+                type: string
+    put:
+      summary: Update dog by ID
+      description: Updates the dog with the specified ID
+      operationId: updateDog
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dog'
+      responses:
+        '200':
+          description: Dog updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '404':
+          description: Dog not found
+          content:
+            text/plain:
+              schema:
+                type: string
+    delete:
+      summary: Delete dog by ID
+      description: Deletes the dog with the specified ID
+      operationId: deleteDog
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Dog deleted successfully
+        '404':
+          description: Dog not found
+          content:
+            text/plain:
+              schema:
+                type: string
+      headers:
+        content-type:
+          schema:
+            type: string
+            default: application/json
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        dateOfBirth:
+          type: date
+          format: yyyy-MM-dd
+        sex:
+          type: string
+          enum:
+            - Male
+            - Female
